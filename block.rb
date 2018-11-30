@@ -27,7 +27,7 @@ class Block
   end
 
   def self.next previous, data
-    Block.new previous.index + 1, data, previous.hash
+    Block.new previous.index + 1, Time.now.to_i, data, previous.hash
   end
 
   def to_hash
@@ -40,7 +40,7 @@ class Block
     raise 'invalid' if calculated_hash != @hash
   end
 
-  def compute_hash_with_proof_of_work difficulty="000000"
+  def compute_hash_with_proof_of_work difficulty="00000"
     nonce = 0
     loop do
       hash = calc_hash_with_nonce nonce

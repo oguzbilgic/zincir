@@ -1,7 +1,13 @@
-class Block
-  attr_reader :blocks
-
+class Blockchain
   def initialize
-    @blocks
+    @blocks = [Block.first]
+  end
+
+  def last
+    @blocks.last
+  end
+
+  def << block
+    @blocks << block
   end
 end
