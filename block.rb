@@ -34,6 +34,10 @@ class Block
     { index: index, timestamp: timestamp, data: data, previous_hash: previous_hash, nonce: nonce, hash: hash }
   end
 
+  def to_s
+    "#{@hash} #{@index}"
+  end
+
   def verify!
     calculated_hash = calc_hash_with_nonce @nonce
 
