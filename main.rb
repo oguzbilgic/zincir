@@ -8,8 +8,8 @@ $blockchain = Blockchain.new
 class Web < Sinatra::Base
   configure do
     set :port, 4000+rand(1000)
-    # set :quiet, true
-    # set :logging, false
+    set :quiet, true
+    set :logging, false
   end
 
   get '/blocks' do
@@ -17,8 +17,12 @@ class Web < Sinatra::Base
   end
 
   get '/blocks/:index' do
-    index = params['index']
-    json $blockchain.block_at(index.to_i).to_hash
+    index = params['index'].to_i
+    if index > $blockchain.last.index
+      status 404
+      return
+    end
+    json $blockchain.block_at(index).to_hash
   end
 end
 
@@ -32,7 +36,7 @@ require 'httparty'
 
 # Download blocks from the seed node
 if ARGV[0]
-  puts "Seed node: #{seed_node}"
+  puts "Seed node: #{ARGV[0]}"
 
   loop do
     index = $blockchain.last.index.to_i + 1
@@ -40,8 +44,7 @@ if ARGV[0]
 
     break if response.code != 200
 
-    $blockchain << Block.from_json_str response.body
-    puts block
+    $blockchain << Block.from_json_str(response.body)
   end
 
   puts 'Finished downloading the chain'
