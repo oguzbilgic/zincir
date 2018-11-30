@@ -1,5 +1,6 @@
 require 'sinatra'
 require "sinatra/json"
+require 'httparty'
 require "./block.rb"
 require "./blockchain.rb"
 
@@ -15,8 +16,7 @@ class Web < Sinatra::Base
   end
 
   post '/connect' do
-    ip = params['ip']
-    puts "Node: #{ip} is connected"
+    puts "Node connected: #{params['ip']}"
     $nodes << params['ip']
   end
 
@@ -32,10 +32,9 @@ class Web < Sinatra::Base
 
   get '/blocks/:index' do
     index = params['index'].to_i
-    if index > $blockchain.last.index
-      status 404
-      return
-    end
+
+    return status 404 if index > $blockchain.last.index
+
     json $blockchain.block_at(index).to_hash
   end
 end
@@ -45,8 +44,6 @@ Thread.new {
   Web.run!
   exit
 }
-
-require 'httparty'
 
 # Download blocks from the seed node
 if ARGV[0]
@@ -63,16 +60,17 @@ if ARGV[0]
     break if response.code != 200
 
     $blockchain << Block.from_json_str(response.body)
+    # TODO use add_relayed_block instead
+    puts "Downloaded #{$blockchain.last}"
   end
 
-  puts 'Finished downloading the chain'
+  puts "Finished downloading the chain"
 end
 
 $blockchain.on_solve do |block|
-  json_str = block.to_hash.to_json
   $nodes.each do |node|
     begin
-      HTTParty.post "#{node}/relay", body: json_str
+      HTTParty.post "#{node}/relay", body: block.to_hash.to_json
     rescue
       #remove node?
     end
