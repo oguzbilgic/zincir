@@ -1,3 +1,4 @@
+require 'json'
 require "digest"
 
 class Block
@@ -28,6 +29,12 @@ class Block
 
   def self.next previous, data
     Block.new previous.index + 1, Time.now.to_i, data, previous.hash
+  end
+
+  def self.from_json_str str
+    block_hash = JSON.parse(str)
+
+    Block.new block_hash["index"].to_i, block_hash["timestamp"], block_hash["data"], block_hash["previous_hash"], block_hash["nonce"].to_i, block_hash["hash"]
   end
 
   def to_hash
