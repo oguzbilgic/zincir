@@ -1,6 +1,8 @@
 class Blockchain
   def initialize
     @blocks = [Block.first]
+    @relayed_blocks = []
+    @callbacks = []
   end
 
   def last
@@ -17,13 +19,65 @@ class Blockchain
     puts block
   end
 
+  def process_relayed
+    if !@relayed_blocks.empty?
+      if @blocks.last.index >= @relayed_blocks.first.index
+        while @blocks.last.index >= @relayed_blocks.first.index
+          index = @relayed_blocks.first.index
+          our_block = block_at index
+          if our_block.timestamp > @relayed_blocks.first.timestamp
+            # pick relayed block
+            @blocks = @blocks[0..index]
+            @blocks << @relayed_blocks.shift
+            puts "Picking relayed block for index #{index}"
+          else
+            # pick our block
+            @relayed_blocks.shift
+            puts "Picking our block for index #{index}"
+          end
+
+          break if @relayed_blocks.empty?
+        end
+
+      else @blocks.last.index + 1 == @relayed_blocks.first.index
+        #check prev hash
+        puts "Adding relayed for #{@relayed_blocks.first.index}"
+        @blocks << @relayed_blocks.shift
+      end
+
+      return true
+    end
+    # if !@relayed_blocks.empty?
+    #   if @blocks.last.index + 1 == @relayed_blocks.first.index
+    #     first_relayed_block = @relayed_blocks.shift
+    #     @blocks << first_relayed_block
+    #
+    #     puts "Adding relayed #{first_relayed_block}"
+    #     true
+    #   end
+    # end
+  end
+
   def work!
     loop do
-      next_block = Block.next $blockchain.last, "Transaction Data..."
+      next if process_relayed
+
+      next_block = Block.next self.last, "Transaction Data..."
+
+      next if process_relayed
 
       @blocks << next_block
 
-      puts next_block
+      puts "Solved #{next_block}"
+      @callbacks.each { |callback| callback.call(next_block)  }
     end
+  end
+
+  def on_solve &block
+    @callbacks << block
+  end
+
+  def add_relayed_block block
+    @relayed_blocks << block
   end
 end

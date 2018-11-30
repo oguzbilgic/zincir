@@ -4,12 +4,26 @@ require "./block.rb"
 require "./blockchain.rb"
 
 $blockchain = Blockchain.new
+$nodes = []
+PORT = 4000+rand(1000)
 
 class Web < Sinatra::Base
   configure do
-    set :port, 4000+rand(1000)
+    set :port, PORT
     set :quiet, true
     set :logging, false
+  end
+
+  post '/connect' do
+    ip = params['ip']
+    puts "Node: #{ip} is connected"
+    $nodes << params['ip']
+  end
+
+  post '/relay' do
+    block = Block.from_json_str(request.body.read)
+    $blockchain.add_relayed_block block
+    puts "Received: #{block}"
   end
 
   get '/blocks' do
@@ -36,7 +50,11 @@ require 'httparty'
 
 # Download blocks from the seed node
 if ARGV[0]
+  $nodes << ARGV[0]
   puts "Seed node: #{ARGV[0]}"
+
+  # Connect to seed node
+  HTTParty.post "#{ARGV[0]}/connect", body: { ip: "http://localhost:#{PORT}" }
 
   loop do
     index = $blockchain.last.index.to_i + 1
@@ -48,6 +66,17 @@ if ARGV[0]
   end
 
   puts 'Finished downloading the chain'
+end
+
+$blockchain.on_solve do |block|
+  json_str = block.to_hash.to_json
+  $nodes.each do |node|
+    begin
+      HTTParty.post "#{node}/relay", body: json_str
+    rescue
+      #remove node?
+    end
+  end
 end
 
 $blockchain.work!
