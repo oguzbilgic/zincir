@@ -16,7 +16,7 @@ class Web < Sinatra::Base
   post '/relay' do
     block = Block.from_json_str(request.body.read)
     $blockchain.add_relayed_block block
-    # puts "Received: #{block}"
+    status 200
   end
 
   get '/blocks' do
