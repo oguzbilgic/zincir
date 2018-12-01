@@ -1,5 +1,5 @@
 # TODO Don't depend on global variables $blockchain, $netwoek and $PORT
-$port = 4000+rand(1000)
+$port = ENV['PORT'] ? ENV['PORT'] || 4000+rand(1000)
 
 class Web < Sinatra::Base
   configure do
@@ -16,7 +16,7 @@ class Web < Sinatra::Base
   post '/relay' do
     block = Block.from_json_str(request.body.read)
     $blockchain.add_relayed_block block
-    puts "Received: #{block}"
+    # puts "Received: #{block}"
   end
 
   get '/blocks' do
