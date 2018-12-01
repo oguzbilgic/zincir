@@ -1,4 +1,5 @@
-# A sample Gemfile
+ruby "2.4.5"
+
 source "https://rubygems.org"
 
 gem "rack", ">= 2.0.6"
