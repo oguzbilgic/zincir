@@ -1,4 +1,4 @@
-# TODO Don't depend on global variables $blockchain, $nodes and $PORT
+# TODO Don't depend on global variables $blockchain, $netwoek and $PORT
 $port = 4000+rand(1000)
 
 class Web < Sinatra::Base
@@ -10,7 +10,7 @@ class Web < Sinatra::Base
 
   post '/connect' do
     puts "Node connected: #{params['ip']}"
-    $nodes << params['ip']
+    $network.add_node params['ip']
   end
 
   post '/relay' do
