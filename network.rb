@@ -2,10 +2,19 @@ class Network
   def initialize blockchain, our_ip, node = nil
     @blockchain = blockchain
     @our_ip = our_ip
-    @nodes = node ? [node] : []
+    @nodes = []
+
+    self.add_node node, true if node
   end
 
-  def add_node node
+  # if we are adding a node, because they send us a message, then we shouldn't
+  # send them a connect message again. We should send connect messages for seed node
+  def add_node node, seed_node = false
+    return unless node
+
+    puts "Connecting to node: #{node}"
+
+    HTTParty.post "#{node}/connect", body: { ip: @our_ip } if seed_node
     @nodes << node
   end
 
@@ -21,11 +30,6 @@ class Network
 
   def download_chain
     return if @nodes.empty?
-
-    puts "Seed node: #{@nodes.first}"
-
-    # Connect to seed node
-    HTTParty.post "#{@nodes.first}/connect", body: { ip: @our_ip }
 
     loop do
       index = @blockchain.last.index.to_i + 1
