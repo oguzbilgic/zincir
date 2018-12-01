@@ -2,12 +2,7 @@ require 'json'
 require "digest"
 
 class Block
-  attr_reader :index
-  attr_reader :timestamp
-  attr_reader :data
-  attr_reader :previous_hash
-  attr_reader :nonce
-  attr_reader :hash
+  attr_reader :index, :timestamp, :data, :previous_hash, :nonce, :hash
 
   def initialize index, timestamp, data, previous_hash, nonce = nil, hash = nil
     @index = index
