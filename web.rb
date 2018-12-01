@@ -1,5 +1,5 @@
 # TODO Don't depend on global variables $blockchain, $netwoek and $PORT
-$port = ENV['PORT'] ? ENV['PORT'] || 4000+rand(1000)
+$port = ENV['PORT'] ? ENV['PORT'] : 4000+rand(1000)
 
 class Web < Sinatra::Base
   configure do
