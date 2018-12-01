@@ -8,8 +8,14 @@ Proof of concept blockchain written in ruby.
 $ bundle
 ```
 
-### Start
+### Start the first node
 
 ```
 $ bundle exec ruby main.rb
+```
+
+### Start additional nodes
+
+```
+$ bundle exec ruby main.rb ANOTHER_NODE_IP
 ```
