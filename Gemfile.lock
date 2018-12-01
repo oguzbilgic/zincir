@@ -21,7 +21,7 @@ GEM
     multi_xml (0.6.0)
     mustermann (1.0.3)
     puma (3.10.0)
-    rack (2.0.3)
+    rack (2.0.6)
     rack-protection (2.0.4)
       rack
     sinatra (2.0.4)
@@ -48,6 +48,7 @@ PLATFORMS
 DEPENDENCIES
   httparty
   puma
+  rack (>= 2.0.6)
   sinatra
   sinatra-contrib
 
