@@ -69,4 +69,8 @@ class Blockchain
   def add_relayed_block block
     @relayed_blocks << block
   end
+
+  def marshal_dump
+    @blocks
+  end
 end

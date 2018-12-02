@@ -24,3 +24,10 @@ $blockchain.on_solve do |block|
 end
 
 $blockchain.work!
+
+# # trap('INT') do
+#   dump_str = Marshal.dump $blockchain
+#   File.write '.blockchain.dump', dump_str
+#   puts 'yoyoy'
+#   # exit
+# # end

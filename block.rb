@@ -40,6 +40,10 @@ class Block
     "#{@hash} #{@index}"
   end
 
+  def marshal_dump
+    [ index, timestamp, data, previous_hash, nonce, hash ]
+  end
+
   def verify!
     calculated_hash = calc_hash_with_nonce @nonce
 
