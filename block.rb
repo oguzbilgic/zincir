@@ -10,7 +10,7 @@ class Block
     @data = data
     @previous_hash = previous_hash
     unless nonce && hash
-      @nonce, @hash = compute_hash_with_proof_of_work
+      @nonce, @hash = solve_block
     else
       @nonce = nonce
       @hash = hash
@@ -41,15 +41,15 @@ class Block
   end
 
   def verify!
-    calculated_hash = calc_hash_with_nonce @nonce
+    calculated_hash = calculate_hash @nonce
 
     raise 'invalid' if calculated_hash != @hash
   end
 
-  def compute_hash_with_proof_of_work difficulty="00000"
+  def solve_block difficulty="00000"
     nonce = 0
     loop do
-      hash = calc_hash_with_nonce nonce
+      hash = calculate_hash nonce
       if hash.start_with? difficulty
         return [nonce,hash]
       else
@@ -58,7 +58,7 @@ class Block
     end
   end
 
-  def calc_hash_with_nonce nonce = 0
+  def calculate_hash nonce = 0
     sha = Digest::SHA256.new
     sha.update nonce.to_s + @index.to_s + @timestamp.to_s + @data + @previous_hash
     sha.hexdigest
