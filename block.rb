@@ -5,15 +5,13 @@ class Block
   attr_reader :index, :timestamp, :data, :previous_hash, :nonce, :hash
 
   def initialize index, timestamp, data, previous_hash, nonce = nil, hash = nil
-    @index = index
-    @timestamp = timestamp
-    @data = data
-    @previous_hash = previous_hash
+    @index, @timestamp, @data, @previous_hash = index, timestamp, data, previous_hash
+
     unless nonce && hash
       @nonce, @hash = solve_block
     else
-      @nonce = nonce
-      @hash = hash
+      @nonce, @hash = nonce, hash
+      
       verify!
     end
   end
@@ -41,20 +39,16 @@ class Block
   end
 
   def verify!
-    calculated_hash = calculate_hash @nonce
-
-    raise 'invalid' if calculated_hash != @hash
+    raise 'invalid' if calculate_hash @nonce != @hash
   end
 
-  def solve_block difficulty="00000"
-    nonce = 0
+  def solve_block difficulty = "00000", nonce = 0
     loop do
       hash = calculate_hash nonce
-      if hash.start_with? difficulty
-        return [nonce,hash]
-      else
-        nonce += 1
-      end
+
+      return [nonce, hash] if hash.start_with? difficulty
+
+      nonce += 1
     end
   end
 
