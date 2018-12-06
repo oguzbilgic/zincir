@@ -1,16 +1,16 @@
 # Zincir
 
-Proof of concept blockchain written in ruby.
+Proof of concept distributed blockchain written in ruby.
 
 ### Install rubygems
 
-```
+```bash
 $ bundle
 ```
 
 ### Start the first node
 
-```
+```bash
 $ bundle exec ruby main.rb
 Solved: 000008d0b97a697d303f46c7835ffdad23c78574df158169906aaf873e4906e7 1
 Server started at http://localhost:4253
@@ -24,7 +24,7 @@ Received: 00000d3e95f7e557ffeefaa849c2c72e516a3971db409e37ebc9880e26eaef51 5
 
 ### Start additional nodes
 
-```
+```bash
 $ bundle exec ruby main.rb ANOTHER_NODE_IP
 Connecting to node: http://localhost:4253
 Downloaded 000008d0b97a697d303f46c7835ffdad23c78574df158169906aaf873e4906e7 1
@@ -36,9 +36,15 @@ Solved: 00000d3e95f7e557ffeefaa849c2c72e516a3971db409e37ebc9880e26eaef51 5
 ...
 ```
 
-#### TODO
+#### Implementation TODO
 
 - Clean up code
 - Don't use global variables: $blockchain, $network, $port
-- Dump blockchain to a file when exiting the process
-- Load blockchain from a dump if it exits
+- Create a rubygem
+
+#### Protocol TODO
+
+- Dump/load blockchain to/from a file when starting/exiting the process 
+- Make difficulty dynamic with the hash rate
+- Specify a model for data
+- Share list of connected nodes with other nodes
