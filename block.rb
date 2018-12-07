@@ -39,7 +39,7 @@ class Block
   end
 
   def verify!
-    raise 'invalid' if calculate_hash @nonce != @hash
+    raise 'invalid' if  @hash != calculate_hash(@nonce)
   end
 
   def solve_block difficulty = "00000", nonce = 0
