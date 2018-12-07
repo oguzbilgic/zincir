@@ -37,7 +37,7 @@ class Blockchain
           break if @relayed_blocks.empty?
         end
 
-      else @blocks.last.index + 1 == @relayed_blocks.first.index
+      elsif @blocks.last.index + 1 == @relayed_blocks.first.index
         #check prev hash
         puts "Adding relayed block for index #{@relayed_blocks.first.index}"
         @blocks << @relayed_blocks.shift
