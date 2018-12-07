@@ -41,10 +41,11 @@ Solved: 00000d3e95f7e557ffeefaa849c2c72e516a3971db409e37ebc9880e26eaef51 5
 - Clean up code
 - Don't use global variables: $blockchain, $network, $port
 - Create a rubygem
+- Disable Puma's startup message 
 
 #### Protocol TODO
 
-- Dump/load blockchain to/from a file when starting/exiting the process 
+- Dump/load blockchain to/from a file when starting/exiting the process
 - Make difficulty dynamic with the hash rate
 - Specify a model for data
 - Share list of connected nodes with other nodes
