@@ -18,33 +18,33 @@ class Blockchain
   end
 
   def process_relayed
-    if !@relayed_blocks.empty?
-      if @blocks.last.index >= @relayed_blocks.first.index
-        while @blocks.last.index >= @relayed_blocks.first.index
-          index = @relayed_blocks.first.index
-          our_block = block_at index
-          if our_block.timestamp > @relayed_blocks.first.timestamp
-            # pick relayed block
-            @blocks = @blocks[0..index]
-            @blocks << @relayed_blocks.shift
-            puts "Picking relayed block for index #{index}"
-          else
-            # pick our block
-            @relayed_blocks.shift
-            puts "Picking our block for index #{index}"
-          end
+    return if @relayed_blocks.empty?
 
-          break if @relayed_blocks.empty?
+    if @blocks.last.index >= @relayed_blocks.first.index
+      while @blocks.last.index >= @relayed_blocks.first.index
+        index = @relayed_blocks.first.index
+        our_block = block_at index
+        if our_block.timestamp > @relayed_blocks.first.timestamp
+          # pick relayed block
+          @blocks = @blocks[0..index]
+          @blocks << @relayed_blocks.shift
+          puts "Picking relayed #{@blocks.last}"
+        else
+          # pick our block
+          @relayed_blocks.shift
+          puts "Picking our block for index #{index}"
         end
 
-      elsif @blocks.last.index + 1 == @relayed_blocks.first.index
-        #check prev hash
-        puts "Adding relayed block for index #{@relayed_blocks.first.index}"
-        @blocks << @relayed_blocks.shift
+        break if @relayed_blocks.empty?
       end
 
-      return true
+    elsif @blocks.last.index + 1 == @relayed_blocks.first.index
+      #check prev hash
+      puts "Adding relayed #{@relayed_blocks.first}"
+      @blocks << @relayed_blocks.shift
     end
+
+    return true
   end
 
   def work!
@@ -57,7 +57,7 @@ class Blockchain
 
       @blocks << next_block
 
-      puts "Solved: #{next_block}"
+      puts "Solved #{next_block}"
       @callbacks.each { |callback| callback.call(next_block)  }
     end
   end

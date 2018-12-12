@@ -35,7 +35,7 @@ class Block
   end
 
   def to_s
-    "#{@hash} #{@index}"
+    "<#{index}-#{@hash[0..6]}..#{@hash[-5..-1]}>"
   end
 
   def verify!
