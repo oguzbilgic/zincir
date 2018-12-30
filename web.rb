@@ -1,33 +1,32 @@
-# TODO Don't depend on global variables $blockchain, $netwoek and $PORT
-$port = ENV['PORT'] ? ENV['PORT'] : 4000+rand(1000)
-
 class Web < Sinatra::Base
+  Port = ENV['PORT'] ? ENV['PORT'] : 4000+rand(1000)
+
   configure do
-    set :port, $port
+    set :port, Web::Port
     set :quiet, true
     set :logging, false
   end
 
   post '/connect' do
     puts "Node connected: #{params['ip']}"
-    $network.add_node params['ip']
+    Network.instance.add_node params['ip']
   end
 
   post '/relay' do
     block = Block.from_json_str(request.body.read)
-    $blockchain.add_relayed_block block
+    Blockchain.instance.add_relayed_block block
     status 200
   end
 
   get '/blocks' do
-    json $blockchain.last.to_hash
+    json Blockchain.instance.last.to_hash
   end
 
   get '/blocks/:index' do
     index = params['index'].to_i
 
-    return status 404 if index > $blockchain.last.index
+    return status 404 if index > Blockchain.instance.last.index
 
-    json $blockchain.block_at(index).to_hash
+    json Blockchain.instance.block_at(index).to_hash
   end
 end

@@ -39,7 +39,6 @@ Solved: 00000d3e95f7e557ffeefaa849c2c72e516a3971db409e37ebc9880e26eaef51 5
 #### Implementation TODO
 
 - Clean up code
-- Don't use global variables: $blockchain, $network, $port
 - Create a rubygem
 - Disable Puma's startup message 
 
