@@ -1,8 +1,15 @@
 class Blockchain
+  Manager = OpenStruct.new(instance: nil)
+
   def initialize
     @blocks = [Block.first]
     @relayed_blocks = []
     @callbacks = []
+  end
+
+  def Blockchain.instance
+    Blockchain::Manager.instance = Blockchain.new if Blockchain::Manager.instance.nil?
+    Blockchain::Manager.instance
   end
 
   def last
