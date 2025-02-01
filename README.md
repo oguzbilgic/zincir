@@ -1,6 +1,6 @@
 # Zincir
 
-Proof of concept distributed blockchain written in ruby.
+A proof-of-concept distributed blockchain implementation written in Ruby. This project demonstrates the basic concepts of blockchain technology in a simple, educational way.
 
 ### Install rubygems
 
@@ -36,14 +36,14 @@ Solved: 00000d3e95f7e557ffeefaa849c2c72e516a3971db409e37ebc9880e26eaef51 5
 ...
 ```
 
-#### Implementation TODO
+### Implementation TODO
 
 - Clean up code
 - Don't use global variables: $blockchain, $network, $port
 - Create a rubygem
 - Disable Puma's startup message 
 
-#### Protocol TODO
+### Protocol TODO
 
 - Dump/load blockchain to/from a file when starting/exiting the process
 - Make difficulty dynamic with the hash rate
